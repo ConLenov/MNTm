@@ -6,4 +6,4 @@ OpenSource SystemMonitor from WIndows 10
 
 Description
 --------------
-Project migration taskmgr.exe from Windows 10 to different platforms. The project is open source code. No code from Microsoft
+Project migration taskmgr.exe from Windows 10 to different platforms. The project is open source code. No code from Microsoft. Project named is "MNTm" (M is Not Task Manager)
