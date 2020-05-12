@@ -12,9 +12,11 @@ type
     Label1: TLabel;
     applist: TStringGrid;
     killappbtn: TButton;
+    Timer1: TTimer;
     procedure Image1Click(Sender: TObject);
     procedure killappbtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -152,6 +154,11 @@ end;
 procedure TForm2.killappbtnClick(Sender: TObject);
 begin
 if killtaskfunc=false then MessageBox(Form2.Handle,'Не возможно снять задачу!','Ошибка',0);
+end;
+
+procedure TForm2.Timer1Timer(Sender: TObject);
+begin
+CurrentInfo;
 end;
 
 end.

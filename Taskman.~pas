@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, ComCtrls, jpeg, ExtCtrls, StdCtrls, Taskman2, TeEngine, TeeProcs,
-   tlhelp32, Grids, registry;
+   tlhelp32, Grids, registry, WinSvc;
 
 type
 TProcessTimer = record
@@ -71,6 +71,8 @@ TProcessTimer = record
     infointernet: TPanel;
     lvProcesses: TListView;
     tmrRefresh: TTimer;
+    ListBox1: TListBox;
+    Timer2: TTimer;
     procedure N5Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -86,6 +88,7 @@ TProcessTimer = record
     procedure infomemoryDblClick(Sender: TObject);
     procedure tmrRefreshTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     { Private declarations }
     ProcessTimersCount: Integer;
@@ -114,6 +117,30 @@ const
   SystemProcessesAndThreadsInformation = 5;
 
   STATUS_INFO_LENGTH_MISMATCH = $C0000004;
+
+  SERVICE_KERNEL_DRIVER       = $00000001;
+   SERVICE_FILE_SYSTEM_DRIVER  = $00000002;
+   SERVICE_ADAPTER             = $00000004;
+   SERVICE_RECOGNIZER_DRIVER   = $00000008;
+
+   SERVICE_DRIVER              =
+     (SERVICE_KERNEL_DRIVER or
+      SERVICE_FILE_SYSTEM_DRIVER or
+      SERVICE_RECOGNIZER_DRIVER);
+
+   SERVICE_WIN32_OWN_PROCESS   = $00000010;
+   SERVICE_WIN32_SHARE_PROCESS = $00000020;
+   SERVICE_WIN32               =
+     (SERVICE_WIN32_OWN_PROCESS or
+      SERVICE_WIN32_SHARE_PROCESS);
+
+   SERVICE_INTERACTIVE_PROCESS = $00000100;
+
+   SERVICE_TYPE_ALL            =
+     (SERVICE_WIN32 or
+      SERVICE_ADAPTER or
+      SERVICE_DRIVER  or
+      SERVICE_INTERACTIVE_PROCESS);
 
 type
   PSYSTEM_BASIC_INFORMATION = ^SYSTEM_BASIC_INFORMATION;
@@ -469,6 +496,8 @@ timer1.Enabled:=true;
 timer1.Interval:=100;
 tmrRefresh.Enabled:=true;
 tmrRefresh.Interval:=100;
+timer2.Enabled:=true;
+timer2.Interval:=100;
 end;
 
 procedure TForm1.N18Click(Sender: TObject);
@@ -477,6 +506,8 @@ timer1.Enabled:=true;
 timer1.Interval:=1000;
 tmrRefresh.Enabled:=true;
 tmrRefresh.Interval:=1000;
+timer2.Enabled:=true;
+timer2.Interval:=1000;
 end;
 
 procedure TForm1.N19Click(Sender: TObject);
@@ -485,12 +516,15 @@ timer1.Enabled:=true;
 timer1.Interval:=10000;
 tmrRefresh.Enabled:=true;
 tmrRefresh.Interval:=10000;
+timer2.Enabled:=true;
+timer2.Interval:=10000;
 end;
 
 procedure TForm1.N20Click(Sender: TObject);
 begin
 timer1.Enabled:=false;
 tmrRefresh.Enabled:=false;
+timer2.Enabled:=false;
 end;
 
 procedure TForm1.N6Click(Sender: TObject);
@@ -532,6 +566,101 @@ procedure TForm1.infomemoryDblClick(Sender: TObject);
 begin
  memform.Show;
  Form1.Hide;
+end;
+
+function ServiceGetList(
+   sMachine : string;
+   dwServiceType,
+   dwServiceState : DWord;
+   slServicesList : TStrings )
+   : boolean;
+ const
+   { Количество служб не более 4096
+    Уменьшить при необходимости }
+   cnMaxServices = 4096;
+
+ type
+   TSvcA = array[0..cnMaxServices]
+           of TEnumServiceStatus;
+   PSvcA = ^TSvcA;
+
+ var
+   //
+   // временная переменная
+   j : integer;
+
+   //
+   // управление службами
+   schm          : SC_Handle;
+
+   //
+   // байт нужно для буфера
+   nBytesNeeded,
+
+   //
+   // количество служб
+   nServices,
+
+   //
+   // указатель на следующую службу
+   nResumeHandle : DWord;
+
+   //
+   // состояние службы
+   ssa : PSvcA;
+ begin
+   Result := false;
+
+   // подключаемся к управлению службами
+   schm := OpenSCManager(
+     PChar(sMachine),
+     Nil,
+     SC_MANAGER_ALL_ACCESS);
+
+   // если удачно
+   if(schm > 0)then
+   begin
+     nResumeHandle := 0;
+
+     New(ssa);
+
+     EnumServicesStatus(
+       schm,
+       dwServiceType,
+       dwServiceState,
+       ssa^[0],
+       SizeOf(ssa^),
+       nBytesNeeded,
+       nServices,
+       nResumeHandle );
+
+     //
+     // Предположим, что размер массива достаточен
+
+     for j := 0 to nServices-1 do
+     begin
+       slServicesList.
+         Add( StrPas(
+           ssa^[j].lpDisplayName ) );
+     end;
+
+     Result := true;
+
+     Dispose(ssa);
+
+     // закрыть дескриптор управления службами
+     CloseServiceHandle(schm);
+   end;
+ end;
+
+ 
+
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+ServiceGetList( '',
+    SERVICE_WIN32,
+    SERVICE_STATE_ALL,
+    ListBox1.Items );
 end;
 
 end.
