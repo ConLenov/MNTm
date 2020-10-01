@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Menus, ComCtrls, jpeg, ExtCtrls, StdCtrls, Taskman2, TeEngine, TeeProcs,
-   tlhelp32, Grids, registry, WinSvc;
+   tlhelp32, Grids, registry, WinSvc, uSMBIOS;
 
 type
 TProcessTimer = record
@@ -73,6 +73,7 @@ TProcessTimer = record
     tmrRefresh: TTimer;
     ListBox1: TListBox;
     Timer2: TTimer;
+    N23: TMenuItem;
     procedure N5Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
@@ -99,8 +100,8 @@ TProcessTimer = record
   public
     { Public declarations }
     procedure CurrentInfo;
-    function OfficialCPUSpeed:string;
     procedure MemInfo;
+    procedure GetProcessorInfo;
   end;
 
 var
@@ -375,6 +376,27 @@ var
   nOldSystemTime  : INT64 = 0;
   nNewCPUTime     : ULONG = 0;
 
+  procedure TForm1.GetProcessorInfo;
+  Var
+    SMBios : TSMBios;
+    LProcessorInfo : TProcessorInformation;
+    LSRAMTypes : TCacheSRAMTypes;
+    I : Integer;
+  begin
+    SMBios := TSMBios.Create;
+    try
+      if SMBios.HasProcessorInfo
+      then
+        for I := Low(SMBios.ProcessorInfo) to High(SMBios.ProcessorInfo) do
+        begin
+          LProcessorInfo := SMBios.ProcessorInfo[I];
+          cpuspeed.Caption:= Format('%d  Mhz', [LProcessorInfo.RAWProcessorInformation^.CurrentSpeed]);
+           end
+    finally
+      SMBios.Free;
+    end;
+  end;
+
 procedure TForm1.tmrRefreshTimer(Sender: TObject);
 var
   spi : SYSTEM_PERFORMANCE_INFORMATION;
@@ -382,6 +404,7 @@ var
   sbi : SYSTEM_BASIC_INFORMATION;
   Dummy: DWORD;
 begin
+GetProcessorInfo;
 CurrentInfo;
   GetSystemInformation;
   if NTQuerySystemInformation(SystemBasicInformation, @sbi,
@@ -467,19 +490,7 @@ end;
 
 procedure TForm1.CurrentInfo;
 begin
-cpuspeed.Caption:=OfficialCPUSpeed;
 meminfo;
-end;
-
-function TForm1.OfficialCPUSpeed:string;
-var reg:TRegistry;
-begin
-reg:=tregistry.Create;
-reg.RootKey:=HKEY_LOCAL_MACHINE;
-reg.OpenKey('hardware\description\system\centralprocessor\0',false);
-OfficialCPUSpeed:=inttostr(reg.readinteger('~mhz'))+' Mhz';
-reg.CloseKey;
-reg.Destroy;
 end;
 
 procedure TForm1.N3Click(Sender: TObject);
@@ -549,11 +560,13 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
 CurrentInfo;
+GetProcessorInfo;
 end;
 
 procedure TForm1.N11Click(Sender: TObject);
 begin
 CurrentInfo;
+GetProcessorInfo;
 end;
 
 procedure TForm1.infocpuDblClick(Sender: TObject);

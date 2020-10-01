@@ -1,6 +1,6 @@
 object cpuform: Tcpuform
   Left = 390
-  Top = 118
+  Top = 119
   BorderStyle = bsNone
   Caption = 'CPU Usage'
   ClientHeight = 473

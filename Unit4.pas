@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   adCpuUsage, Dialogs, ExtCtrls, TeEngine, Series, TeeProcs, Chart, jpeg,
-  StdCtrls, Menus, LDSfunc, tlhelp32, Grids, registry;
+  StdCtrls, Menus, LDSfunc, tlhelp32, Grids, registry, uSMBIOS;
 
 type
   Tcpuform = class(TForm)
@@ -38,7 +38,7 @@ type
   public
     { Public declarations }
     procedure CurrentInfo;
-    function OfficialCPUSpeed:string;
+    procedure GetProcessorInfo;
   end;
 
 var
@@ -79,30 +79,41 @@ end;
 
 procedure Tcpuform.CurrentInfo;
 begin
-cpuspeedc.Caption:=OfficialCPUSpeed;
+
 end;
 
 procedure Tcpuform.Timer2Timer(Sender: TObject);
 begin
 CurrentInfo;
+GetProcessorInfo
 end;
 
-function Tcpuform.OfficialCPUSpeed:string;
-var reg:TRegistry;
-begin
-reg:=tregistry.Create;
-reg.RootKey:=HKEY_LOCAL_MACHINE;
-reg.OpenKey('hardware\description\system\centralprocessor\0',false);
-OfficialCPUSpeed:=inttostr(reg.readinteger('~mhz'))+' Mhz';
-reg.CloseKey;
-reg.Destroy;
-end;
+procedure Tcpuform.GetProcessorInfo;
+  Var
+    SMBios : TSMBios;
+    LProcessorInfo : TProcessorInformation;
+    LSRAMTypes : TCacheSRAMTypes;
+    I : Integer;
+  begin
+    SMBios := TSMBios.Create;
+    try
+      if SMBios.HasProcessorInfo
+      then
+        for I := Low(SMBios.ProcessorInfo) to High(SMBios.ProcessorInfo) do
+        begin
+          LProcessorInfo := SMBios.ProcessorInfo[I];
+          cpuspeedc.Caption:= Format('%d  Mhz', [LProcessorInfo.RAWProcessorInformation^.CurrentSpeed]);
+          cpu_name.Caption :=LProcessorInfo.ProcessorVersionStr;
+           end
+    finally
+      SMBios.Free;
+    end;
+  end;
 
 procedure Tcpuform.FormShow(Sender: TObject);
 begin
 with LDSf do begin
     cpu_freq.Caption := GetProcessorInfo(CP_SPEED,0,'0')+' Mhz';
-    cpu_name.Caption := GetProcessorInfo(CP_NameString,0,'NONE');
   end;
 end;
 

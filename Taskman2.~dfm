@@ -12,6 +12,9 @@ object Form2: TForm2
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  DesignSize = (
+    373
+    369)
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
@@ -19,6 +22,7 @@ object Form2: TForm2
     Top = 328
     Width = 30
     Height = 30
+    Anchors = [akLeft, akBottom]
     Picture.Data = {
       07544269746D6170FE0A0000424DFE0A00000000000036000000280000001E00
       00001E0000000100180000000000C80A0000120B0000120B0000000000000000
@@ -117,6 +121,7 @@ object Form2: TForm2
     Top = 328
     Width = 89
     Height = 30
+    Anchors = [akLeft, akBottom]
     AutoSize = False
     Caption = #1055#1086#1076#1088#1086#1073#1085#1077#1077
     Font.Charset = RUSSIAN_CHARSET
@@ -150,6 +155,7 @@ object Form2: TForm2
     Top = 320
     Width = 91
     Height = 33
+    Anchors = [akRight, akBottom]
     Caption = #1057#1085#1103#1090#1100' '#1079#1072#1076#1072#1095#1091
     TabOrder = 1
     OnClick = killappbtnClick

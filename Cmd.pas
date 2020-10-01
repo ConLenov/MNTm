@@ -1,0 +1,44 @@
+unit Cmd;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  Tnewtask = class(TForm)
+    Label1: TLabel;
+    ComboBox1: TComboBox;
+    CancButton: TButton;
+    OkButton: TButton;
+    procedure CancButtonClick(Sender: TObject);
+    procedure OkButtonClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  newtask: Tnewtask;
+
+implementation
+
+uses Taskman;
+
+{$R *.dfm}
+
+procedure Tnewtask.CancButtonClick(Sender: TObject);
+begin
+Form1.Show;
+ newtask.Hide;
+end;
+
+procedure Tnewtask.OkButtonClick(Sender: TObject);
+begin
+winexec(pchar(ComboBox1.text),1);
+newtask.Hide;
+end;
+
+end.

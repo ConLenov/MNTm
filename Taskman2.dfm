@@ -3,7 +3,7 @@ object Form2: TForm2
   Top = 124
   Width = 381
   Height = 403
-  Caption = #1044#1080#1089#1087#1077#1090#1095#1077#1088' '#1079#1072#1076#1072#1095
+  Caption = 'MNTm'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,8 @@ object Form2: TForm2
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    373
-    369)
+    365
+    365)
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage

@@ -1,6 +1,6 @@
 object cpuform: Tcpuform
   Left = 390
-  Top = 118
+  Top = 119
   BorderStyle = bsNone
   Caption = 'CPU Usage'
   ClientHeight = 473
@@ -312,36 +312,6 @@ object cpuform: Tcpuform
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object procces: TLabel
-      Left = 8
-      Top = 304
-      Width = 65
-      Height = 16
-      Caption = #1055#1088#1086#1094#1077#1089#1089#1099
-      Color = clBtnFace
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object procceslabel: TLabel
-      Left = 8
-      Top = 336
-      Width = 108
-      Height = 24
-      Caption = 'procceslabel'
-      Color = clBtnFace
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentColor = False
