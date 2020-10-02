@@ -7,13 +7,13 @@ uses
   Dialogs, StdCtrls;
 
 type
-  TForm3 = class(TForm)
+  Tnewtask = class(TForm)
     Label1: TLabel;
     ComboBox1: TComboBox;
-    Button1: TButton;
-    Button2: TButton;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    CancButton: TButton;
+    OkButton: TButton;
+    procedure CancButtonClick(Sender: TObject);
+    procedure OkButtonClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -21,7 +21,7 @@ type
   end;
 
 var
-  Form3: TForm3;
+  newtask: Tnewtask;
 
 implementation
 
@@ -29,16 +29,16 @@ uses Taskman;
 
 {$R *.dfm}
 
-procedure TForm3.Button1Click(Sender: TObject);
+procedure Tnewtask.CancButtonClick(Sender: TObject);
 begin
-Form1.Show;
- Form3.Hide;
+MaxInfoForm.Show;
+ newtask.Hide;
 end;
 
-procedure TForm3.Button2Click(Sender: TObject);
+procedure Tnewtask.OkButtonClick(Sender: TObject);
 begin
 winexec(pchar(ComboBox1.text),1);
-Form3.Hide;
+newtask.Hide;
 end;
 
 end.

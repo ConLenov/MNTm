@@ -25,13 +25,13 @@ var
 
 implementation
 
-uses Taskman;
+uses Max;
 
 {$R *.dfm}
 
 procedure Tnewtask.CancButtonClick(Sender: TObject);
 begin
-Form1.Show;
+MaxInfoForm.Show;
  newtask.Hide;
 end;
 
