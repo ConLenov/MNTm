@@ -1,6 +1,6 @@
 object MinForm: TMinForm
-  Left = 240
-  Top = 124
+  Left = 551
+  Top = 162
   Width = 381
   Height = 403
   Caption = 'MNTm'
@@ -11,6 +11,7 @@ object MinForm: TMinForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   DesignSize = (
     365

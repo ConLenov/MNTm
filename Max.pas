@@ -90,6 +90,8 @@ TProcessTimer = record
     procedure tmrRefreshTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
+    procedure N23Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     ProcessTimersCount: Integer;
@@ -109,7 +111,7 @@ var
 
 implementation
 
-uses Cmd, CpuInfo, MemInfo;
+uses Cmd, CpuInfo, MemInfo, Info;
 
 const
   SystemBasicInformation = 0;
@@ -468,7 +470,7 @@ end;
 
 procedure TMaxInfoForm.N5Click(Sender: TObject);
 begin
- MaxInfoForm.Close;
+ Application.Terminate;
 end;
 
 procedure TMaxInfoForm.Image1Click(Sender: TObject);
@@ -674,6 +676,17 @@ ServiceGetList( '',
     SERVICE_WIN32,
     SERVICE_STATE_ALL,
     ListBox1.Items );
+end;
+
+procedure TMaxInfoForm.N23Click(Sender: TObject);
+begin
+About.Show;
+end;
+
+procedure TMaxInfoForm.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+Application.Terminate;
 end;
 
 end.

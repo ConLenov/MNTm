@@ -7,7 +7,8 @@ uses
   Cmd in 'Cmd.pas' {newtask},
   CpuInfo in 'CpuInfo.pas' {cpuform},
   MemInfo in 'MemInfo.pas' {memform},
-  uSMBIOS in 'uSMBIOS.pas';
+  uSMBIOS in 'uSMBIOS.pas',
+  Info in 'Info.pas' {About};
 
 {$R *.res}
 
@@ -18,5 +19,6 @@ begin
   Application.CreateForm(Tnewtask, newtask);
   Application.CreateForm(Tcpuform, cpuform);
   Application.CreateForm(Tmemform, memform);
+  Application.CreateForm(TAbout, About);
   Application.Run;
 end.
